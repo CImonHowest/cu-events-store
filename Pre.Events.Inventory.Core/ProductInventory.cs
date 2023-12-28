@@ -4,6 +4,12 @@ public class ProductInventory
     public string ProductName { get; }
     public int ItemsInStock { get; private set; }
 
+    public event ProductShortageHandler ProductShortage;
+
+    public delegate void ProductShortageHandler(object sender, ProductShortageEventArgs e);
+
+
+
     public ProductInventory(string productName)
     {
         ProductName = productName;
@@ -18,9 +24,16 @@ public class ProductInventory
 
     public int Sell(int amount)
     {
-        ItemsInStock -= amount;
+        if (ItemsInStock < amount)
+        {
+            ProductShortageEventArgs args = new ProductShortageEventArgs(ProductName, 10);
+            ProductShortage?.Invoke(this, args);
+        }
+        ItemsInStock = Math.Max(0, ItemsInStock - amount);
         return ItemsInStock;
     }
+
+
 }
 
 

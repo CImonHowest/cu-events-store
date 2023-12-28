@@ -7,13 +7,16 @@ namespace Pre.Events.Inventory.Cons
     {
         public void Run()
         {
+            Administration a = new Administration();
+            
             ProductInventory apple = new ProductInventory("Apple");
+            apple.ProductShortage += a.ProductShortageHandlerAdministration;
             DoSimulation(apple);
         }
 
         public void DoSimulation(ProductInventory p)
         {
-            Console.Write("buy or sell? ");
+            Console.Write("buy or sell? (exit to leave) ");
             string buyOrSell = Console.ReadLine();
             while (buyOrSell != "exit")
             {
